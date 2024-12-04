@@ -4,6 +4,7 @@
 #include "add_entry.cpp"
 #include "delete_entry.cpp"
 #include "view_entry.cpp"
+#include "StringUtils.h"
 
 using namespace std;
 
@@ -32,9 +33,9 @@ int main() {
             case 3:
                 deletePhonebookEntry(phonebookFile);
                 break;
-            // case 4:
-            //     viewPhonebookEntry(phonebookFile);
-            //     break;
+            case 4:
+                viewPhonebookEntry(phonebookFile);
+                break;
             case 5:
                 cout << "Exiting the program. Goodbye!" << endl;
                 break;

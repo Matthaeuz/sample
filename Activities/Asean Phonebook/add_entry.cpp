@@ -2,6 +2,8 @@
 #include <fstream>
 #include <string>
 #include <unordered_map>
+#include <algorithm>
+#include "StringUtils.h"
 
 using namespace std;
 
@@ -40,20 +42,39 @@ void storeToPhonebook() {
         cout << "Enter country code: ";
         getline(cin, countryCode);
 
-        // Validate country code
-        if (ASEAN_COUNTRIES.find(countryCode) == ASEAN_COUNTRIES.end()) {
+        // Trim inputs
+        studentNumber = trim(studentNumber);
+        surname = trim(surname);
+        firstName = trim(firstName);
+        occupation = trim(occupation);
+        gender = trim(gender);
+        countryCode = trim(countryCode);
+
+        // Validate country code in a separate loop
+        while (true) {
+            cout << "Enter country code: ";
+            getline(cin, countryCode);
+            countryCode = trim(countryCode);
+
+            if (ASEAN_COUNTRIES.find(countryCode) != ASEAN_COUNTRIES.end()) {
+                break; // Valid country code, exit the loop
+            }
+
             cout << "Invalid country code! Must be one of: ";
             for (const auto& country : ASEAN_COUNTRIES) {
                 cout << country.first << " ";
             }
             cout << endl;
-            continue;
         }
 
         cout << "Enter area code: ";
         getline(cin, areaCode);
         cout << "Enter number: ";
         getline(cin, number);
+
+        // Trim remaining inputs
+        areaCode = trim(areaCode);
+        number = trim(number);
 
         // Write data to file
         file << studentNumber << "," << surname << "," << firstName << ","

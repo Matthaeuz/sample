@@ -7,7 +7,6 @@
 
 using namespace std;
 
-// Structure to represent an entry in the phonebook
 struct PhonebookEntry {
     string studentNumber;
     string surname;
@@ -19,7 +18,7 @@ struct PhonebookEntry {
     string number;
 };
 
-// Function to load all entries from the phonebook file
+// Laod phonebook files
 vector<PhonebookEntry> loadPhonebook(const string& filename) {
     vector<PhonebookEntry> entries;
     ifstream file(filename);
@@ -48,7 +47,7 @@ vector<PhonebookEntry> loadPhonebook(const string& filename) {
     return entries;
 }
 
-// Function to save all entries back to the phonebook file
+// Save all entries to phonebook
 void savePhonebook(const string& filename, const vector<PhonebookEntry>& entries) {
     ofstream file(filename, ios::trunc);
 

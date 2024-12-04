@@ -1,114 +1,94 @@
-// #include <iostream>
-// #include <fstream>
-// #include <sstream>
-// #include <unordered_map>
-// #include <vector>
-// #include <string>
-// #include <set>
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <vector>
+#include <sstream>
+#include <algorithm>
+#include <unordered_map>
+#include "StringUtils.h"
 
-// using namespace std;
+using namespace std;
 
-// // Helper function to trim leading and trailing spaces
-// string trim(const string& str) {
-//     size_t first = str.find_first_not_of(' ');
-//     size_t last = str.find_last_not_of(' ');
-//     return (first == string::npos || last == string::npos) ? "" : str.substr(first, last - first + 1);
-// }
+// Function to split a string by a delimiter
+vector<string> split(const string& str, char delimiter) {
+    vector<string> tokens;
+    size_t start = 0, end = 0;
 
-// // ASEAN country mapping
-// unordered_map<string, string> ASEAN_COUNTRIES = {
-//     {"60", "Federation of Malaysia"},
-//     {"62", "Republic of Indonesia"},
-//     {"63", "Republic of Philippines"},
-//     {"65", "Republic of Singapore"},
-//     {"66", "Kingdom of Thailand"}
-// };
+    while ((end = str.find(delimiter, start)) != string::npos) {
+        string token = str.substr(start, end - start);
+        tokens.push_back(trim(token));
+        start = end + 1;
+    }
+    // Add the last token
+    tokens.push_back(trim(str.substr(start)));
 
-// // Function to display and search ASEAN phonebook by country
-// void viewPhonebookEntry(const string& filename) {
-//     while (true) {
-//         cout << "\nSearch by:\n[1] Search by country\n[2] Search by surname\n[3] Go back to main menu\n";
-//         cout << "Enter choice: ";
-//         int choice;
-//         cin >> choice;
+    return tokens;
+}
 
-//         if (choice == 1) {
-//             // Search by country
-//             set<string> selectedCountryCodes;
+// Formatter function for output
+string formatEntry(const vector<string>& entryFields) {
+    return entryFields[1] + ", " + entryFields[2] + ", with student number " +
+           entryFields[0] + ", a " + entryFields[3] +
+           ". His/her phone number is " + entryFields[7] + ".";
+}
 
-//             cout << "\nFrom which country:\n";
-//             int index = 1;
-//             for (const auto& country : ASEAN_COUNTRIES) {
-//                 cout << "[" << index++ << "] " << country.second << endl;
-//             }
-//             cout << "[0] No more\n";
+// View function
+void viewPhonebookEntry(const string& phonebookFile) {
+    ifstream file(phonebookFile);
+    if (!file.is_open()) {
+        cerr << "Error: Unable to open the phonebook file." << endl;
+        return;
+    }
 
-//             // Read country selections
-//             while (true) {
-//                 cout << "Enter choice " << index << ": ";
-//                 int countryChoice;
-//                 cin >> countryChoice;
+    int option;
+    string searchValue;
+    vector<string> matchingEntries;
 
-//                 if (countryChoice == 0) break; // No more choices
+    cout << "\nSearch Options:" << endl;
+    cout << "[1] Search by Surname" << endl;
+    cout << "[2] Search by Country Code" << endl;
+    cout << "Select an option: ";
+    cin >> option;
+    cin.ignore(); // Clear the input buffer
 
-//                 // Validate choice
-//                 if (countryChoice > 0 && countryChoice <= ASEAN_COUNTRIES.size()) {
-//                     auto it = next(ASEAN_COUNTRIES.begin(), countryChoice - 1);
-//                     selectedCountryCodes.insert(it->first);
-//                 } else {
-//                     cout << "Invalid choice. Try again.\n";
-//                 }
-//             }
+    if (option == 1) {
+        cout << "Enter Surname: ";
+    } else if (option == 2) {
+        cout << "Enter Country Code: ";
+    } else {
+        cout << "Invalid option." << endl;
+        return;
+    }
 
-//             // Display selected country codes
-//             cout << "Selected country codes: ";
-//             for (const auto& code : selectedCountryCodes) {
-//                 cout << code << " ";
-//             }
-//             cout << "\n";
+    getline(cin, searchValue);
 
-//             // Search phonebook for matching entries
-//             ifstream inFile(filename);
-//             if (!inFile) {
-//                 cerr << "Error opening file!\n";
-//                 return;
-//             }
+    string line;
+    while (getline(file, line)) {
+    vector<string> fields = split(line, ',');
+    if (fields.size() < 8) continue; // Ensure there are enough fields
 
-//             cout << "Entries matching the selected countries:\n";
-//             string line;
-//             bool found = false;
-//             while (getline(inFile, line)) {
-//                 stringstream ss(line);
-//                 string studentNumber, surname, givenName, profession, gender, countryCode, otherFields;
+    // Debug: Print the fields to inspect
+    for (const auto& field : fields) {
+        cout << "[" << field << "] ";
+    }
+    cout << endl;
 
-//                 getline(ss, studentNumber, ',');
-//                 getline(ss, surname, ',');
-//                 getline(ss, givenName, ',');
-//                 getline(ss, profession, ',');
-//                 getline(ss, gender, ',');
-//                 getline(ss, countryCode, ',');
+    string matchField = (option == 1) ? fields[1] : fields[5]; // Surname or Country Code
+    if (trim(matchField) == trim(searchValue)) {
+        matchingEntries.push_back(line);
+    }
+}
 
-//                 countryCode = trim(countryCode);
 
-//                 // Check if the country code matches any selected
-//                 if (selectedCountryCodes.find(countryCode) != selectedCountryCodes.end()) {
-//                     cout << line << endl;
-//                     found = true;
-//                 }
-//             }
+    file.close();
 
-//             if (!found) {
-//                 cout << "No entries found for the selected countries.\n";
-//             }
-//             inFile.close();
-//         } else if (choice == 2) {
-//             // Placeholder for searching by surname (can be implemented similarly)
-//             cout << "Search by surname not yet implemented.\n";
-//         } else if (choice == 3) {
-//             // Go back to main menu
-//             break;
-//         } else {
-//             cout << "Invalid choice. Try again.\n";
-//         }
-//     }
-// }
+    if (matchingEntries.empty()) {
+        cout << "No matching entries found for \"" << searchValue << "\"." << endl;
+    } else {
+        cout << "\nMatching Entries:\n" << endl;
+        for (const auto& entry : matchingEntries) {
+            vector<string> fields = split(entry, ',');
+            cout << formatEntry(fields) << endl;
+        }
+    }
+}
