@@ -1,0 +1,25 @@
+@startuml
+!theme aws-orange
+actor User
+participant "Infix to Postfix" as Postfix
+participant "Postfix Evaluation" as Evaluation
+participant "Expression Tree Construction" as Tree
+participant "Tree Printer" as Printer
+
+== Input Expression ==
+User -> Postfix : Enter infix expression
+Postfix -> Postfix : Convert infix to postfix
+
+== Postfix Evaluation ==
+Postfix -> Evaluation : Evaluate postfix expression
+Evaluation -> Evaluation : Process each operator and operand
+Evaluation -> User : Return evaluation result
+
+== Expression Tree Construction ==
+Postfix -> Tree : Construct expression tree from infix
+Tree -> Tree : Process operators and operands
+Tree -> Printer : Pass root node to print tree
+Printer -> Printer : Print tree by levels
+Printer -> User : Display tree levels
+
+@enduml
