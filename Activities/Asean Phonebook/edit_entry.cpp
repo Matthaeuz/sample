@@ -4,6 +4,8 @@
 #include <sstream>
 #include <string>
 #include <algorithm>
+#include <limits>
+
 
 using namespace std;
 
@@ -109,8 +111,20 @@ void editPhonebookEntry(const string& filename) {
     cout << "Enter choice: ";
 
     int choice;
-    cin >> choice;
-    cin.ignore(); // Clear input buffer
+    while (true) {
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        if (cin.fail() || choice < 1 || choice > 8) {
+            // Clear error state and ignore invalid input
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Invalid choice. Please enter a number between 1 and 8." << endl;
+        } else {
+            cin.ignore();
+            break;
+        }
+    }
 
     // Edit the selected field
     string newValue;

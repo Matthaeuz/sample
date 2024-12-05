@@ -67,11 +67,11 @@ void viewPhonebookEntry(const string& phonebookFile) {
     vector<string> fields = split(line, ',');
     if (fields.size() < 8) continue; // Ensure there are enough fields
 
-    // Debug: Print the fields to inspect
-    for (const auto& field : fields) {
-        cout << "[" << field << "] ";
-    }
-    cout << endl;
+    // // Debug: Print the fields to inspect
+    // for (const auto& field : fields) {
+    //     cout << "[" << field << "] ";
+    // }
+    // cout << endl;
 
     string matchField = (option == 1) ? fields[1] : fields[5]; // Surname or Country Code
     if (trim(matchField) == trim(searchValue)) {

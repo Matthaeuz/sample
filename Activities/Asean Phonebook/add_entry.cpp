@@ -39,8 +39,6 @@ void storeToPhonebook() {
         getline(cin, occupation);
         cout << "Enter gender (M for male, F for female): ";
         getline(cin, gender);
-        cout << "Enter country code: ";
-        getline(cin, countryCode);
 
         // Trim inputs
         studentNumber = trim(studentNumber);
