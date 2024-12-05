@@ -13,7 +13,10 @@ using namespace std;
 vector<string> split(const string& str, char delimiter) {
     vector<string> tokens;
     size_t start = 0, end = 0;
-
+    /*
+    Searches for the delimiter starting from start that will return string::npos "no position" when not found
+    "apple,banana,cherry" the next start index will be 5
+    */
     while ((end = str.find(delimiter, start)) != string::npos) {
         string token = str.substr(start, end - start);
         tokens.push_back(trim(token));

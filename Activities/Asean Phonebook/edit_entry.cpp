@@ -51,6 +51,10 @@ vector<PhonebookEntry> loadPhonebook(const string& filename) {
 
 // Save all entries to phonebook
 void savePhonebook(const string& filename, const vector<PhonebookEntry>& entries) {
+    /*
+    Write in the file
+    trunc: contents will be cleared if already existing
+    */
     ofstream file(filename, ios::trunc);
 
     if (!file) {
@@ -81,7 +85,11 @@ void editPhonebookEntry(const string& filename) {
     cout << "Enter student number: ";
     cin >> studentNumber;
 
-    // Search for the entry by student number
+    /*
+    Search for the entry by student number
+    Uses Capture-by-reference [&] lambda since you can access or modify
+    the original values of the phonebook without making a copy
+    */
     auto it = find_if(entries.begin(), entries.end(), [&](const PhonebookEntry& entry) {
         return entry.studentNumber == studentNumber;
     });
